@@ -19,6 +19,8 @@ Response Body (Success) :
 
 ```json
 {
+  "success" : true,
+  "message": "Successfully register student",
   "data" : {
     "username" : "johndoe",
     "name" : "John Doe",
@@ -31,11 +33,13 @@ Response Body (Failed) :
 
 ```json
 {
-  "errors" : "Email is already taken"
+  "success" : false,
+  "message" : "Email is already taken",
+  "data" : null
 }
 ```
 
-## Login User
+## Login Student
 
 Endpoint : POST /student/login
 
@@ -52,6 +56,8 @@ Response Body (Success) :
 
 ```json
 {
+  "success" : true,
+  "message": "Successfully login student",
   "data" : {
     "username" : "johndoe",
     "name" : "John Doe",
@@ -65,13 +71,18 @@ Response Body (Failed) :
 
 ```json
 {
-  "errors" : "Username or password incorrect"
+  "success" : false,
+  "message" : "Username or password incorrect",
+  "data": null
 }
 ```
 
 ## Book Mentoring Session
 
 Endpoint : POST /student/bookSession
+
+Headers :
+- Authorization: token
 
 Request Body :
 
@@ -86,6 +97,8 @@ Response Body (Success) :
 
 ```json
 {
+  "success" : true,
+  "message": "Successfully book mentoring session",
   "data" : {
     "mentor_name" : "Jane Doe",
     "student_name" : "John Doe",
@@ -100,7 +113,9 @@ Response Body (Failed) :
 
 ```json
 {
-  "errors" : "Quota for the session has run out"
+  "success" : false,
+  "message" : "Quota for the session has run out",
+  "data": null
 }
 ```
 
@@ -115,6 +130,8 @@ Response Body (Success) :
 
 ```json
 {
+  "success" : true,
+  "message": "Successfully get student dashboard",
   "data" : [
     {
       "id" : 1,
@@ -140,7 +157,9 @@ Response Body (Failed) :
 
 ```json
 {
-  "errors" : "Unauthorized"
+  "success" : false,
+  "message" : "Unauthorized",
+  "data": null
 }
 ```
 
@@ -155,6 +174,8 @@ Response Body (Success) :
 
 ```json
 {
+  "success" : true,
+  "message": "Successfully get current student",
   "data" : {
     "username" : "johndoe",
     "phone" : "123456789",
@@ -167,7 +188,9 @@ Response Body (Failed) :
 
 ```json
 {
-  "errors" : "Unauthorized"
+  "success" : false,
+  "message" : "Unauthorized",
+  "data": null
 }
 ```
 
@@ -192,6 +215,8 @@ Response Body (Success) :
 
 ```json
 {
+  "success" : true,
+  "message": "Successfully update student",
   "data" : {
     "email" : "johndoe@example.com",
     "name" : "John Doe",
@@ -204,7 +229,9 @@ Response Body (Failed) :
 
 ```json
 {
-  "errors" : "Password must be at least 6 characters long"
+  "success" : false,
+  "message" : "Password must be at least 6 characters long",
+  "data": null
 }
 ```
 
@@ -219,7 +246,8 @@ Response Body (Success) :
 
 ```json
 {
-  "data" : true
+  "success" : true,
+  "message": "Successfully logout student",
 }
 ```
 
@@ -227,6 +255,7 @@ Response Body (Failed) :
 
 ```json
 {
+  "success" : false,
   "errors" : "Unauthorized"
 }
 ```
