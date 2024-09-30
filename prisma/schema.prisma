@@ -20,7 +20,7 @@ model User {
   name     String  @db.VarChar(100)
   phone    String  @db.VarChar(20)
   token    String? @unique @db.VarChar(100)
-  role     Role
+  role     String @db.VarChar(7)
 
   mentor_profile  MentorProfile?
   mentor_sessions MentorSession[]
@@ -28,12 +28,6 @@ model User {
 
   @@map("users")
 }
-
-enum Role {
-  STUDENT
-  MENTOR
-}
-
 model MentorProfile {
   id        Int    @id @default(autoincrement())
   mentor_id Int    @unique

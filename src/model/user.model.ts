@@ -1,4 +1,5 @@
 export class UserResponse {
+    id: number;
     email: string;
     name: string;
     phone: string;
@@ -12,4 +13,9 @@ export class RegisterUserRequest {
     name: string;
     phone: string;
     role: any;
+}
+
+export class LoginUserRequest {
+    email: string;
+    password: string;
 }
