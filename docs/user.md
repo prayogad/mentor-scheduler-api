@@ -56,40 +56,9 @@ Response Body (Success) :
     "email" : "johndoe@example.com",
     "name" : "John Doe",
     "phone" : "123456789",
-    "roles": "mentor" | "student"
+    "roles": "mentor" | "student",
+    "token": "uuid
   }
-}
-```
-
-## Get User Dashboard
-
-Endpoint : GET /user/dashboard
-
-Headers :
-- Authorization: token
-
-Response Body (Success) :
-
-```json
-{
-  "success" : true,
-  "message": "Successfully get user dashboard",
-  "data" : [
-    {
-      "id" : 1,
-      "mentor_name" : "Jane Doe",
-      "student_name" : "John Doe",
-      "scheduledAt" : "2024-09-28 12:34:56",
-      "field" : "Web Development"
-    },
-    {
-      "id" : 2,
-      "mentor_name" : "Jane Doe",
-      "student_name" : "John Doe",
-      "scheduledAt" : "2024-09-28 12:34:56",
-      "field" : "Web Development"
-    }
-  ]
 }
 ```
 
@@ -144,6 +113,38 @@ Response Body (Success) :
     "name" : "John Doe",
     "phone" : "123456789",
   }
+}
+```
+
+## Get User Dashboard
+
+Endpoint : GET /user/dashboard
+
+Headers :
+- Authorization: token
+
+Response Body (Success) :
+
+```json
+{
+  "success" : true,
+  "message": "Successfully get user dashboard",
+  "data" : [
+    {
+      "id" : 1,
+      "mentor_name" : "Jane Doe",
+      "student_name" : "John Doe",
+      "scheduledAt" : "2024-09-28 12:34:56",
+      "field" : "Web Development"
+    },
+    {
+      "id" : 2,
+      "mentor_name" : "Jane Doe",
+      "student_name" : "John Doe",
+      "scheduledAt" : "2024-09-28 12:34:56",
+      "field" : "Web Development"
+    }
+  ]
 }
 ```
 

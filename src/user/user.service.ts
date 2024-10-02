@@ -5,6 +5,7 @@ import { UserValidation } from "./user.validation";
 import { HttpException, Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { v4 as uuid } from 'uuid';
+import { User } from "@prisma/client";
 
 @Injectable()
 export class UserService {
@@ -76,6 +77,16 @@ export class UserService {
             phone: user.phone,
             role: user.role,
             token: user.token
+        }
+    };
+
+    async get(user: User): Promise<UserResponse> {
+        return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            phone: user.phone,
+            role: user.role
         }
     }
 }

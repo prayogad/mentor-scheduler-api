@@ -6,6 +6,8 @@ import { TestModule } from './test.module';
 import { TestService } from './test.service';
 import {Logger} from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import * as cookieParser from 'cookie-parser';
+import { ConfigService } from '@nestjs/config';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -18,6 +20,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.use(cookieParser())
     await app.init();
 
     testService = app.get(TestService);
@@ -84,6 +87,42 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(401)
         expect(response.body.success).toBe(false)
         expect(response.body.message).toBe("email or password wrong")
+        expect(response.body.data).toBeUndefined()
+    });
+  });
+
+  describe('Get Current User GET /user/api/current', () => {
+    beforeEach(async () => {
+      await testService.deleteUser()
+      await testService.createUser()
+    })
+
+    it('should be able to get current user data', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/user/api/current')
+        .set('Cookie', ['auth=test'])
+
+        logger.info(response.body)
+
+        expect(response.status).toBe(200)
+        expect(response.body.success).toBe(true)
+        expect(response.body.message).toBe("successfully get user")
+        expect(response.body.data.email).toBe("test@example.com")
+        expect(response.body.data.name).toBe("test")
+        expect(response.body.data.phone).toBe("12345678")
+        expect(response.body.data.role).toBe("student")
+    });
+    
+    it('should be reject if cookie is invalid', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/user/api/current')
+        .set('Cookie', ['auth=wrongCookie'])
+
+        logger.info(response.body)
+
+        expect(response.status).toBe(401)
+        expect(response.body.success).toBe(false)
+        expect(response.body.message).toBe("Unauthorize")
         expect(response.body.data).toBeUndefined()
     });
   })

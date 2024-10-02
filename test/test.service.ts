@@ -13,7 +13,8 @@ export class TestService {
                 password: await bcrypt.hash("pass1234", 10),
                 name: "test",
                 phone: "12345678",
-                role: "student"
+                role: "student",
+                token: "test"
             }
         })
     };
