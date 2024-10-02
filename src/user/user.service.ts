@@ -1,11 +1,11 @@
-import { LoginUserRequest, RegisterUserRequest, UserResponse } from "src/model/user.model";
+import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from "src/model/user.model";
 import { PrismaService } from "../common/prisma.service";
 import { ValidationService } from "../common/validation.service";
 import { UserValidation } from "./user.validation";
 import { HttpException, Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { v4 as uuid } from 'uuid';
 import { User } from "@prisma/client";
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -14,18 +14,22 @@ export class UserService {
         private prismaService: PrismaService
     ) { }
 
-    async register(request: RegisterUserRequest): Promise<UserResponse> {
-        const registerRequest: RegisterUserRequest = this.validationService.validate(UserValidation.REGISTER, request)
-
-        const userInDatabase = await this.prismaService.user.count({
+    async ifEmailRegistered(email: string) {
+        const user = await this.prismaService.user.count({
             where: {
-                email: registerRequest.email
+                email: email
             }
         });
 
-        if (userInDatabase) {
+        if (user) {
             throw new HttpException('email already registered', 400)
         }
+    }
+
+    async register(request: RegisterUserRequest): Promise<UserResponse> {
+        const registerRequest: RegisterUserRequest = this.validationService.validate(UserValidation.REGISTER, request)
+
+        this.ifEmailRegistered(registerRequest.email);
 
         registerRequest.password = await bcrypt.hash(registerRequest.password, 10)
 
@@ -88,5 +92,52 @@ export class UserService {
             phone: user.phone,
             role: user.role
         }
+    };
+
+    async update(user: User, request: UpdateUserRequest): Promise<UserResponse> {
+        const updateRequest: UpdateUserRequest = this.validationService.validate(UserValidation.UPDATE, request)
+
+        if (updateRequest.email) {
+            this.ifEmailRegistered(updateRequest.email);
+            user.email = updateRequest.email
+        }
+
+        if (updateRequest.password) {
+            user.password = await bcrypt.hash(updateRequest.password, 10)
+        }
+
+        if (updateRequest.name) {
+            user.name = updateRequest.name
+        }
+
+        if (updateRequest.phone) {
+            user.phone = updateRequest.phone
+        }
+
+        const result = await this.prismaService.user.update({
+            where: {
+                id: user.id
+            },
+            data: user
+        })
+
+        return {
+            id: result.id,
+            email: result.email,
+            name: result.name,
+            phone: result.phone,
+            role: result.role,
+        }
+    };
+
+    async logout(user: User) {
+        await this.prismaService.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                token: null
+            }
+        })
     }
 }

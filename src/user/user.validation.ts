@@ -13,5 +13,12 @@ export class UserValidation {
     static readonly LOGIN: ZodType = z.object({
         email: z.string().email().min(1).max(100),
         password: z.string().min(6).max(100),
-    })
+    });
+
+    static readonly UPDATE: ZodType = z.object({
+        email: z.string().email().min(1).max(100).optional(),
+        password: z.string().min(6).max(100).optional(),
+        name: z.string().min(1).max(100).optional(),
+        phone: z.string().min(1).max(20).optional()
+    });
 }

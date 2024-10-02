@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
-  app.use(cookieParser(configService.get('COOKIE-PARSER-KEY')))
+  app.use(cookieParser(configService.get('COOKIE_PARSER_KEY')))
 
   const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);

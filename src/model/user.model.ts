@@ -19,3 +19,10 @@ export class LoginUserRequest {
     email: string;
     password: string;
 }
+
+export class UpdateUserRequest {
+    email?: string;
+    password?: string;
+    name?: string;
+    phone?: string;
+}

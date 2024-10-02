@@ -26,4 +26,12 @@ export class TestService {
             }
         })
     }
+    
+    async deleteUpdatedUser() {
+        await this.prismaService.user.deleteMany({
+            where: {
+                email: "newTest@example.com"
+            }
+        })
+    }
 }
