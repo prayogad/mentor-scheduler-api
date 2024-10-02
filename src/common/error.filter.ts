@@ -9,12 +9,12 @@ export class ErrorFilter implements ExceptionFilter {
         if (exception instanceof HttpException) {
             response.status(exception.getStatus()).json({
                 success: false,
-                message: exception.getResponse(),
+                message: exception.getResponse()
             });
         } else if (exception instanceof ZodError) {
             response.status(400).json({
                 success: false,
-                message: 'Validation Error',
+                message: exception.errors,
             });
         } else {
             response.status(500).json({

@@ -2,7 +2,7 @@
 
 ## Create or Update Mentor Profile
 
-Endpoint : PUT /mentor/profile
+Endpoint : PUT /mentor/api/profile
 
 Request Body :
 
@@ -43,7 +43,8 @@ Response Body (Success) :
   "success" : true,
   "message": "Successfully get mentor data",
   "data" : {
-    "username" : "johndoe",
+    "id": 1,
+    "email" : "johndoe@example.com",
     "phone" : "123456789",
     "name" : "John Doe",
     "field": "Web Development",

@@ -35,7 +35,15 @@ export class UserService {
 
         const user = await this.prismaService.user.create({
             data: registerRequest
-        })
+        });
+
+        if (user.role === "mentor") {
+            await this.prismaService.mentorProfile.create({
+                data: {
+                    mentor_id: user.id
+                }
+            })
+        }
 
         return {
             id: user.id,

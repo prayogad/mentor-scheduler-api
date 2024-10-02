@@ -2,7 +2,7 @@
 
 ## Add Mentor Available Session
 
-Endpoint : POST /mentor/schedule
+Endpoint : POST /mentor/api/schedule
 
 Headers :
 - Authorization: token
@@ -32,7 +32,7 @@ Response Body (Success) :
 
 ## Update Available Session 
 
-Endpoint : PUT /mentor/schedule/:scheduleId
+Endpoint : PUT /mentor/api/schedule/:scheduleId
 
 Headers :
 - Authorization: token
@@ -87,7 +87,7 @@ Response Body
 
 ## Remove Available Session
 
-Endpoint : DELETE /mentor/schedule/:scheduleId
+Endpoint : DELETE /mentor/api/schedule/:scheduleId
 
 Headers :
 - Authorization: token

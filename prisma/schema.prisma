@@ -31,9 +31,9 @@ model User {
 model MentorProfile {
   id        Int    @id @default(autoincrement())
   mentor_id Int    @unique
-  bio       String @db.Text
-  field     String @db.VarChar(100)
-  mentor    User   @relation(fields: [mentor_id], references: [id])
+  bio       String? @db.Text
+  field     String? @db.VarChar(100)
+  mentor    User   @relation(fields: [mentor_id], references: [id], onDelete: Cascade)
 
   @@map("mentor_profiles")
 }
@@ -44,7 +44,7 @@ model MentorSession {
   quota     Int
   mentor_id Int
 
-  mentor          User            @relation(fields: [mentor_id], references: [id])
+  mentor          User            @relation(fields: [mentor_id], references: [id], onDelete: NoAction)
   booked_sessions BookedSession[]
 
   @@map("mentor_sessions")
@@ -55,8 +55,8 @@ model BookedSession {
   student_id Int
   booked_at  DateTime @default(now())
 
-  student User          @relation(fields: [student_id], references: [id])
-  session MentorSession @relation(fields: [session_id], references: [id])
+  student User          @relation(fields: [student_id], references: [id], onDelete: NoAction)
+  session MentorSession @relation(fields: [session_id], references: [id], onDelete:NoAction)
 
   @@id([session_id, student_id])
   @@map("booked_sessions")

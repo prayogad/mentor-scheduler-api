@@ -38,6 +38,7 @@ export class CommonModule implements NestModule {
             .apply(AuthMiddleware)
             .forRoutes(
                 { path: '/user/api/*', method: RequestMethod.ALL },
+                { path: '/mentor/api/*', method: RequestMethod.ALL }
             )
     }
 } 
