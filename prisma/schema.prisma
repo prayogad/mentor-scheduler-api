@@ -40,13 +40,12 @@ model MentorProfile {
 }
 
 model MentorSession {
-  id        Int      @id @default(autoincrement())
-  date      DateTime @db.Date()
-  time      DateTime @db.Time(0)
-  quota     Int
-  mentor_id Int
+  id          Int      @id @default(autoincrement())
+  scheduledAt DateTime @db.DateTime(0)
+  quota       Int
+  mentor_id   Int
 
-  mentor          User            @relation(fields: [mentor_id], references: [id], onDelete: NoAction)
+  mentor          User            @relation(fields: [mentor_id], references: [id], onDelete: Cascade)
   booked_sessions BookedSession[]
 
   @@map("mentor_sessions")

@@ -1,5 +1,3 @@
-import { MentorProfile, User } from "@prisma/client";
-
 export class MentorResponse {
     id: number;
     email: string;
