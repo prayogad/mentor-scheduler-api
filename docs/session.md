@@ -11,7 +11,8 @@ Request Body :
 
 ```json
 {
-  "scheduledAt" : "2024-09-28 12:34:56",
+  "date" : "2024-09-28",
+  "time": "12:34:56",
   "quota": 5
 }
 ```
@@ -24,7 +25,8 @@ Response Body (Success) :
   "message": "Successfully add new schedule",
   "data" : {
     "id": 1,
-    "scheduledAt" : "2024-09-28 12:34:56",
+    "date" : "2024-09-28",
+    "time": "12:34:56",
     "quota": 5
   }
 }
@@ -41,7 +43,8 @@ Request Body :
 
 ```json
 {
-  "scheduledAt" : "2024-09-28 12:34:56", // optional
+  "date" : "2024-09-28", // optional
+  "time": "12:34:56", // optional
   "quota": 5 // optional
 }
 ```
@@ -54,7 +57,8 @@ Response Body (Success) :
   "message": "Successfully update schedule",
   "data" : {
     "id": 1,
-    "scheduledAt" : "2024-09-28 12:34:56",
+    "date" : "2024-09-28",
+    "time": "12:34:56",
     "quota": 5
   }
 }
@@ -73,12 +77,14 @@ Response Body
     "data": [
         {
             "id": 1,
-            "scheduledAt": "2024-09-28 12:34:56",
+            "date" : "2024-09-28",
+            "time": "12:34:56",
             "quota": 5
         },
         {
             "id": 2,
-            "scheduledAt": "2024-09-29 12:34:56",
+            "date" : "2024-09-28",
+            "time": "12:34:56",
             "quota": 2
         }
     ]
@@ -126,7 +132,8 @@ Response Body (Success) :
   "data" : {
     "mentor_name" : "Jane Doe",
     "student_name" : "John Doe",
-    "scheduledAt" : "2024-09-28 12:34:56",
+    "date" : "2024-09-28",
+    "time": "12:34:56",
     "field" : "Web Development"
   }
 }

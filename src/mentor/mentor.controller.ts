@@ -37,4 +37,17 @@ export class MentorController {
             data: result
         }
     }
+    
+    @Get('')
+    @HttpCode(200)
+    async getAll(
+    ): Promise<WebResponse<MentorResponse[]>> {
+        const result = await this.mentorService.getAllMentor();
+
+        return {
+            success: true,
+            message: "successfully get all mentors",
+            data: result
+        }
+    }
 }

@@ -124,4 +124,24 @@ describe('AppController (e2e)', () => {
       expect(response.body.data).toBeUndefined()
     });
   });
+  
+  describe('Get All Mentors GET /mentor', () => {
+    beforeEach(async () => {
+      await testService.deleteUser()
+      await testService.createMentor()
+    })
+
+    it('should be able to get all mentor data', async () => {
+      const mentor = await testService.getMentor()
+      const response = await request(app.getHttpServer())
+        .get(`/mentor`)
+
+      logger.info(response.body)
+
+      expect(response.status).toBe(200)
+      expect(response.body.success).toBe(true)
+      expect(response.body.message).toBe("successfully get all mentors")
+      expect(response.body.data).toBeDefined()
+    });
+  });
 });

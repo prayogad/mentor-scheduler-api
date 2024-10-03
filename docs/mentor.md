@@ -92,7 +92,6 @@ Response Body (Failed) :
 ```json
 {
   "success" : false,
-  "message" : "Unauthorized",
-  "data": null
+  "message" : "Unauthorized"
 }
 ```
