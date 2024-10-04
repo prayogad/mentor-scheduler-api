@@ -7,7 +7,6 @@ import { TestService } from './test.service';
 import { Logger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as cookieParser from 'cookie-parser';
-import { ConfigService } from '@nestjs/config';
 import * as cookie from "cookie-signature";
 
 describe('AppController (e2e)', () => {
@@ -30,11 +29,11 @@ describe('AppController (e2e)', () => {
 
   describe('Mentor Profile PUT /mentor/api/profile', () => {
     beforeEach(async () => {
-      await testService.deleteUser()
+      await testService.deleteAll()
       await testService.createMentor()
     })
 
-    it('should be able to register user', async () => {
+    it('should be able to update mentor profile', async () => {
       const signedCookie = 's:' + cookie.sign("test", "TEST");
       const response = await request(app.getHttpServer())
         .put('/mentor/api/profile')
@@ -71,7 +70,7 @@ describe('AppController (e2e)', () => {
       expect(response.body.data).toBeUndefined()
     });
     
-    it('should be able rejected if request invalid', async () => {
+    it('should be rejected if request invalid', async () => {
       const signedCookie = 's:' + cookie.sign("test", "TEST");
       const response = await request(app.getHttpServer())
         .put('/mentor/api/profile')
@@ -92,7 +91,7 @@ describe('AppController (e2e)', () => {
 
   describe('Get Mentor By Id GET /mentor/:id', () => {
     beforeEach(async () => {
-      await testService.deleteUser()
+      await testService.deleteAll()
       await testService.createMentor()
     })
 
@@ -127,7 +126,7 @@ describe('AppController (e2e)', () => {
   
   describe('Get All Mentors GET /mentor', () => {
     beforeEach(async () => {
-      await testService.deleteUser()
+      await testService.deleteAll()
       await testService.createMentor()
     })
 

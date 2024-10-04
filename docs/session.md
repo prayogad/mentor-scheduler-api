@@ -109,7 +109,7 @@ Response Body
 
 ## Book Mentoring Session
 
-Endpoint : POST /student/bookSession
+Endpoint : POST /student/bookSession/:mentorId
 
 Headers :
 - Authorization: token
@@ -118,7 +118,6 @@ Request Body :
 
 ```json
 {
-  "mentor_id" : 1,
   "session_id" : 3
 }
 ```

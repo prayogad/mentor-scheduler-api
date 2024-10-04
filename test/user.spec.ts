@@ -7,8 +7,8 @@ import { TestService } from './test.service';
 import { Logger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import * as cookieParser from 'cookie-parser';
-import { ConfigService } from '@nestjs/config';
 import * as cookie from "cookie-signature";
+import { after } from 'node:test';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -30,7 +30,7 @@ describe('AppController (e2e)', () => {
 
   describe('User Register POST /user/register', () => {
     beforeEach(async () => {
-      await testService.deleteUser()
+      await testService.deleteAll()
     })
 
     it('should be able to register user', async () => {
@@ -41,7 +41,7 @@ describe('AppController (e2e)', () => {
           password: "pass1234",
           name: "test",
           phone: "12345678",
-          role: "student",
+          role: "mentor",
         });
 
       logger.info(response.body)
@@ -55,8 +55,8 @@ describe('AppController (e2e)', () => {
 
   describe('User Login POST /user/login', () => {
     beforeEach(async () => {
-      await testService.deleteUser()
-      await testService.createUser()
+      await testService.deleteAll()
+      await testService.createMentor()
     })
 
     it('should be able to login user', async () => {
@@ -94,8 +94,8 @@ describe('AppController (e2e)', () => {
 
   describe('Get Current User GET /user/api/current', () => {
     beforeEach(async () => {
-      await testService.deleteUser()
-      await testService.createUser()
+      await testService.deleteAll()
+      await testService.createMentor()
     })
 
     it('should be able to get current user data', async () => {
@@ -112,7 +112,7 @@ describe('AppController (e2e)', () => {
       expect(response.body.data.email).toBe("test@example.com")
       expect(response.body.data.name).toBe("test")
       expect(response.body.data.phone).toBe("12345678")
-      expect(response.body.data.role).toBe("student")
+      expect(response.body.data.role).toBe("mentor")
     });
 
     it('should be reject if cookie is invalid', async () => {
@@ -131,9 +131,12 @@ describe('AppController (e2e)', () => {
 
   describe('Update User PUT /user/api/update', () => {
     beforeEach(async () => {
+      await testService.deleteAll()
+      await testService.createMentor()
+    });
+
+    afterEach(async () => {
       await testService.deleteUpdatedUser()
-      await testService.deleteUser()
-      await testService.createUser()
     })
 
     it('should be able to update user info', async () => {
@@ -193,8 +196,8 @@ describe('AppController (e2e)', () => {
 
   describe('Logout User POST /user/api/logout', () => {
     beforeEach(async () => {
-      await testService.deleteUser()
-      await testService.createUser()
+      await testService.deleteAll()
+      await testService.createMentor()
     })
 
     it('should be able to logout data', async () => {

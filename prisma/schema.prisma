@@ -45,7 +45,7 @@ model MentorSession {
   quota       Int
   mentor_id   Int
 
-  mentor          User            @relation(fields: [mentor_id], references: [id], onDelete: Cascade)
+  mentor          User            @relation(fields: [mentor_id], references: [id])
   booked_sessions BookedSession[]
 
   @@map("mentor_sessions")
@@ -56,8 +56,8 @@ model BookedSession {
   student_id Int
   booked_at  DateTime @default(now())
 
-  student User          @relation(fields: [student_id], references: [id], onDelete: NoAction)
-  session MentorSession @relation(fields: [session_id], references: [id], onDelete: NoAction)
+  student User          @relation(fields: [student_id], references: [id])
+  session MentorSession @relation(fields: [session_id], references: [id])
 
   @@id([session_id, student_id])
   @@map("booked_sessions")

@@ -6,6 +6,12 @@ import * as bcrypt from "bcrypt";
 export class TestService {
     constructor(private prismaService: PrismaService) { }
 
+    async deleteAll() {
+        await this.deleteBookedSession()
+        await this.deleteSession()
+        await this.deleteUser()
+    }
+
     async createUser() {
         await this.prismaService.user.create({
             data: {
@@ -62,5 +68,63 @@ export class TestService {
                 mentor_profile: true
             }
         });
+    }
+
+    async createSesion() {
+        const mentor = await this.getMentor()
+        return this.prismaService.mentorSession.create({
+            data: {
+                scheduledAt: "2030-10-03T14:30:00Z",
+                quota: 5,
+                mentor_id: mentor.id
+            }
+        });
+    }
+
+    async getSesion() {
+        const mentor = await this.getMentor()
+
+        if (!mentor) {
+            return
+        }
+
+        return this.prismaService.mentorSession.findFirst({
+            where: {
+                mentor_id: mentor.id
+            }
+        });
+    }
+
+    async deleteSession() {
+        const mentor = await this.getMentor()
+
+        if (!mentor) {
+            return
+        }
+
+        await this.prismaService.mentorSession.deleteMany({
+            where: {
+                mentor_id: mentor.id
+            }
+        })
+    }
+    
+    async deleteBookedSession() {
+        const mentor = await this.getMentor()
+        const session = await this.getSesion()
+
+        if (!session) {
+            return
+        }
+
+        if (!mentor) {
+            return
+        }
+
+        await this.prismaService.bookedSession.deleteMany({
+            where: {
+                session_id: session.id
+            }
+        })
     }
 }
