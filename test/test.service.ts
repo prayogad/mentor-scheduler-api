@@ -52,7 +52,7 @@ export class TestService {
                 token: "test",
                 mentor_profile: {
                     create: {
-
+                        field: "Web Development"
                     }
                 }
             }
@@ -126,5 +126,16 @@ export class TestService {
                 session_id: session.id
             }
         })
+    }
+
+    async createBookedSession() {
+        const session = await this.getSesion()
+
+        return this.prismaService.bookedSession.create({
+            data: {
+                session_id: session.id,
+                student_id: 414
+            }
+        });
     }
 }

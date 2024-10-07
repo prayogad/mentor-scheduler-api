@@ -38,7 +38,7 @@ export class MentorController {
         }
     }
     
-    @Get('')
+    @Get()
     @HttpCode(200)
     async getAll(
     ): Promise<WebResponse<MentorResponse[]>> {

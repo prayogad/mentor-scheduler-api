@@ -1,4 +1,4 @@
-import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from "src/model/user.model";
+import { DashboardResponse, LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from "src/model/user.model";
 import { PrismaService } from "../common/prisma.service";
 import { ValidationService } from "../common/validation.service";
 import { UserValidation } from "./user.validation";
@@ -137,6 +137,65 @@ export class UserService {
             role: result.role,
         }
     };
+
+    async getDashboard(user: User): Promise<DashboardResponse[]> {
+
+        if (user.role === "mentor") {
+            const dashboards = await this.prismaService.bookedSession.findMany({
+                where: {
+                    session: {
+                        mentor_id: user.id
+                    }
+                },
+                include: {
+                    session: {
+                        include: {
+                            mentor: {
+                                include: {
+                                    mentor_profile: true
+                                }
+                            }
+                        }
+                    },
+                    student: true
+                }
+            });
+
+            return dashboards.map(dashboard => ({
+                mentor_name: dashboard.session.mentor.name,
+                student_name: dashboard.student.name,
+                scheduledAt: dashboard.session.scheduledAt,
+                field: dashboard.session.mentor.mentor_profile.field
+            }))
+        } else {
+            const dashboards = await this.prismaService.bookedSession.findMany({
+                where: {
+                    student: {
+                        id: user.id
+                    }
+                },
+                include: {
+                    session: {
+                        include: {
+                            mentor: {
+                                include: {
+                                    mentor_profile: true
+                                }
+                            }
+                        }
+                    },
+                    student: true
+                }
+            });
+
+            return dashboards.map(dashboard => ({
+                mentor_name: dashboard.session.mentor.name,
+                student_name: dashboard.student.name,
+                scheduledAt: dashboard.session.scheduledAt,
+                field: dashboard.session.mentor.mentor_profile.field
+            }))
+        }
+    }
 
     async logout(user: User) {
         await this.prismaService.user.update({

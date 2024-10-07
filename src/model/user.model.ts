@@ -7,6 +7,13 @@ export class UserResponse {
     token?: string
 }
 
+export class DashboardResponse {
+    mentor_name: string;
+    student_name: string;
+    scheduledAt: Date;
+    field: string;
+}
+
 export class RegisterUserRequest {
     email: string;
     password: string;

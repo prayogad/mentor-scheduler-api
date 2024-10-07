@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, Post, Put, Res } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from "../model/user.model";
+import { DashboardResponse, LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from "../model/user.model";
 import { WebResponse } from "../model/web.model";
 import { Auth } from "../common/auth.decorator";
 import { User } from "@prisma/client";
@@ -66,6 +66,20 @@ export class UserController {
         return {
             success: true,
             message: "successfully update user",
+            data: result
+        }
+    }
+
+    @Get('/api/dashboard')
+    @HttpCode(200)
+    async dashboard(
+        @Auth() user: User
+    ): Promise<WebResponse<DashboardResponse[]>> {
+        const result = await this.userService.getDashboard(user);
+        
+        return {
+            success: true,
+            message: "successfully get user dashboard",
             data: result
         }
     }

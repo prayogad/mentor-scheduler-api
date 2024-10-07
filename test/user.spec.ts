@@ -194,6 +194,46 @@ describe('AppController (e2e)', () => {
     })
   });
 
+  describe('Get User Dashboard GET /user/api/dashboard', () => {
+    beforeEach(async () => {
+      await testService.deleteAll()
+      await testService.createMentor()
+      await testService.createSesion()
+      await testService.createBookedSession()
+    })
+
+    it('should be able to get user dashboard', async () => {
+      const signedCookie = 's:' + cookie.sign("test", "TEST");
+      const response = await request(app.getHttpServer())
+        .get('/user/api/dashboard')
+        .set('Cookie', [`auth=${signedCookie}`]);
+
+      logger.info(response.body)
+
+      expect(response.status).toBe(200)
+      expect(response.body.success).toBe(true)
+      expect(response.body.message).toBe("successfully get user dashboard")
+      expect(response.body.data[0].mentor_name).toBe("test")
+      expect(response.body.data[0].student_name).toBe("student")
+      expect(response.body.data[0].field).toBe("Web Development")
+      expect(response.body.data[0].scheduledAt).toBeDefined()
+    });
+
+    it('should be reject if cookie is invalid', async () => {
+      const signedCookie = 's:' + cookie.sign("wrong", "TEST");
+      const response = await request(app.getHttpServer())
+        .get('/user/api/dashboard')
+        .set('Cookie', [`auth=${signedCookie}`]);
+
+      logger.info(response.body)
+
+      expect(response.status).toBe(401)
+      expect(response.body.success).toBe(false)
+      expect(response.body.message).toBe("Unauthorize")
+      expect(response.body.data).toBeUndefined()
+    });
+  });
+
   describe('Logout User POST /user/api/logout', () => {
     beforeEach(async () => {
       await testService.deleteAll()
