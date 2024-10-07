@@ -5,7 +5,6 @@ import { WebResponse } from "../model/web.model";
 import { Auth } from "../common/auth.decorator";
 import { User } from "@prisma/client";
 import { Response } from "express";
-import { v4 as uuid } from 'uuid';
 
 @Controller('/user')
 export class UserController {

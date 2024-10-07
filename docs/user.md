@@ -21,7 +21,7 @@ Response Body (Success) :
 ```json
 {
   "success" : true,
-  "message": "Successfully register user",
+  "message": "successfully create user",
   "data" : {
     "id": 1,
     "email" : "johndoe@example.com",
@@ -50,13 +50,13 @@ Response Body (Success) :
 ```json
 {
   "success" : true,
-  "message": "Successfully login user",
+  "message": "successfully login user",
   "data" : {
     "id": 1,
     "email" : "johndoe@example.com",
     "name" : "John Doe",
     "phone" : "123456789",
-    "roles": "mentor" | "student",
+    "role": "mentor" | "student",
     "token": "uuid
   }
 }
@@ -64,32 +64,33 @@ Response Body (Success) :
 
 ## Get Current User
 
-Endpoint : GET /user/current
+Endpoint : GET /user/api/current
 
-Headers :
-- Authorization: token
+Cookies :
+- auth: token
 
 Response Body (Success) :
 
 ```json
 {
   "success" : true,
-  "message": "Successfully get current user",
+  "message": "successfully get user",
   "data" : {
-    "username" : "johndoe",
-    "phone" : "123456789",
+    "id": 1,
+    "email": "johndoe@example.com",
     "name" : "John Doe",
-    "roles": "mentor" | "student"
+    "phone" : "123456789",
+    "role": "mentor" | "student"
   }
 }
 ```
 
 ## Update User Data
 
-Endpoint : PUT /user/update
+Endpoint : PUT /user/api/update
 
-Headers :
-- Authorization: token
+Cookies :
+- auth: token
 
 Request Body :
 
@@ -109,26 +110,28 @@ Response Body (Success) :
   "success" : true,
   "message": "Successfully update student",
   "data" : {
+    "id": 1,
     "email" : "johndoe@example.com",
     "name" : "John Doe",
     "phone" : "123456789",
+    "role": "mentor" | "student"
   }
 }
 ```
 
 ## Get User Dashboard
 
-Endpoint : GET /user/dashboard
+Endpoint : GET /user/api/dashboard
 
-Headers :
-- Authorization: token
+Cookies :
+- auth: token
 
 Response Body (Success) :
 
 ```json
 {
   "success" : true,
-  "message": "Successfully get user dashboard",
+  "message": "successfully get user dashboard",
   "data" : [
     {
       "mentor_name" : "Jane Doe",
@@ -148,17 +151,17 @@ Response Body (Success) :
 
 ## Logout User
 
-Endpoint : DELETE /user/logout
+Endpoint : POST /user/logout
 
-Headers :
-- Authorization: token
+Cookies :
+- auth: token
 
 Response Body (Success) :
 
 ```json
 {
   "success" : true,
-  "message": "Successfully logout user",
+  "message": "successfully logout user",
 }
 ```
 ## Error Response
@@ -168,7 +171,6 @@ Response Body (Failed) :
 ```json
 {
   "success" : false,
-  "message" : "Unauthorized",
-  "data": null
+  "message" : "Unauthorized"
 }
 ```

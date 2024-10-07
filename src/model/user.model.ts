@@ -19,7 +19,7 @@ export class RegisterUserRequest {
     password: string;
     name: string;
     phone: string;
-    role: any;
+    role: string;
 }
 
 export class LoginUserRequest {

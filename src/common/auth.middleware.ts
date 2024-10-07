@@ -8,7 +8,6 @@ export class AuthMiddleware implements NestMiddleware {
 
     async use(req: any, res: any, next: (error?: Error | any) => void) {
         const token: string = req.signedCookies['auth'] as string;
-        console.log(`============================ ${token}`)
         if (token) {
             const user = await this.prismaService.user.findUnique({
                 where: {

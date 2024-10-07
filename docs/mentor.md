@@ -4,6 +4,9 @@
 
 Endpoint : PUT /mentor/api/profile
 
+Cookies :
+- auth: token
+
 Request Body :
 
 ```json
@@ -18,11 +21,12 @@ Response Body (Success) :
 ```json
 {
   "success" : true,
-  "message": "Successfully update mentor profile",
+  "message": "successfully update mentor profile",
   "data" : {
     "id": 1,
     "email" : "johndoe@example.com",
     "name" : "John Doe",
+    "phone": "12345678",
     "field" : "Web Development",
     "bio" : "I am mentor...."
   }
@@ -33,15 +37,12 @@ Response Body (Success) :
 
 Endpoint : GET /mentor/:mentorId
 
-Headers :
-- Authorization: token
-
 Response Body (Success) :
 
 ```json
 {
   "success" : true,
-  "message": "Successfully get mentor data",
+  "message": "successfully get mentor by id",
   "data" : {
     "id": 1,
     "email" : "johndoe@example.com",
@@ -57,27 +58,26 @@ Response Body (Success) :
 
 Endpoint : GET /mentor
 
-Headers :
-- Authorization: token
-
 Response Body (Success) :
 
 ```json
 {
     "success": true,
-    "message": "Successfully get all mentor data",
+    "message": "successfully get all mentors",
     "data": [
         {
+            "id": 1,
             "email": "johndoe@example.com",
-            "phone": "123456789",
             "name": "John Doe",
+            "phone": "123456789",
             "field": "Web Development",
             "bio": "I am mentor..."
         },
         {
+            "id": 2,
             "email": "janedoe@example.com",
-            "phone": "123456789",
             "name": "Jane Doe",
+            "phone": "123456789",
             "field": "Machine Learning",
             "bio": "I am mentor..."
         }

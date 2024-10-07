@@ -2,17 +2,16 @@
 
 ## Add Mentor Available Session
 
-Endpoint : POST /mentor/api/schedule
+Endpoint : POST /session/api/addSession
 
-Headers :
-- Authorization: token
+Cookies :
+- auth: token
 
 Request Body :
 
 ```json
 {
-  "date" : "2024-09-28",
-  "time": "12:34:56",
+  "scheduledAt" : "2024-10-03T14:30:00Z",
   "quota": 5
 }
 ```
@@ -25,8 +24,8 @@ Response Body (Success) :
   "message": "Successfully add new schedule",
   "data" : {
     "id": 1,
-    "date" : "2024-09-28",
-    "time": "12:34:56",
+    "mentor_id" : 1,
+    "scheduledAt": "2024-10-03 14:30:00",
     "quota": 5
   }
 }
@@ -34,17 +33,16 @@ Response Body (Success) :
 
 ## Update Available Session 
 
-Endpoint : PUT /mentor/api/schedule/:scheduleId
+Endpoint : PUT /session/api/updateSession/:sessionId
 
-Headers :
-- Authorization: token
+Cookies :
+- auth: token
 
 Request Body :
 
 ```json
 {
-  "date" : "2024-09-28", // optional
-  "time": "12:34:56", // optional
+  "scheduledAt" : "2024-10-03T14:30:00Z", // optional
   "quota": 5 // optional
 }
 ```
@@ -54,11 +52,11 @@ Response Body (Success) :
 ```json
 {
   "success" : true,
-  "message": "Successfully update schedule",
+  "message": "successfully update mentor session",
   "data" : {
     "id": 1,
-    "date" : "2024-09-28",
-    "time": "12:34:56",
+    "mentor_id" : 1,
+    "scheduledAt": "2024-10-03 14:30:00",
     "quota": 5
   }
 }
@@ -66,7 +64,7 @@ Response Body (Success) :
 
 ## Get Mentor Available Sessions
 
-Endpoint : GET /mentor/:mentorId/schedule
+Endpoint : GET /session/getSession/:mentorId
 
 Response Body
 
@@ -77,14 +75,14 @@ Response Body
     "data": [
         {
             "id": 1,
-            "date" : "2024-09-28",
-            "time": "12:34:56",
+            "mentor_id": 1,
+            "scheduledAt" : "2030-10-03 14:30:00",
             "quota": 5
         },
         {
             "id": 2,
-            "date" : "2024-09-28",
-            "time": "12:34:56",
+            "mentor_id": 1,
+            "scheduledAt" : "2030-10-03 14:30:00",
             "quota": 2
         }
     ]
@@ -93,26 +91,26 @@ Response Body
 
 ## Remove Available Session
 
-Endpoint : DELETE /mentor/api/schedule/:scheduleId
+Endpoint : DELETE /session/api/deleteSession/:sessionId
 
-Headers :
-- Authorization: token
+Cookies :
+- auth: token
 
 Response Body
 
 ```json
 {
   "success" : true,
-  "message": "Successfully remove session"
+  "message": "successfully delete mentor session"
 }
 ```
 
 ## Book Mentoring Session
 
-Endpoint : POST /student/bookSession/:mentorId
+Endpoint : POST /session/api/student/bookSession/:mentorId
 
-Headers :
-- Authorization: token
+Cookies :
+- auth: token
 
 Request Body :
 
@@ -127,13 +125,13 @@ Response Body (Success) :
 ```json
 {
   "success" : true,
-  "message": "Successfully book mentoring session",
+  "message": "successfully book mentoring session",
   "data" : {
+    "scheduledAt" : "2024-10-03 14:30:00",
     "mentor_name" : "Jane Doe",
     "student_name" : "John Doe",
-    "date" : "2024-09-28",
-    "time": "12:34:56",
-    "field" : "Web Development"
+    "field" : "Web Development",
+    "bookedAt": "2024-10-03 14:30:00"
   }
 }
 ```
@@ -145,7 +143,6 @@ Response Body (Failed) :
 ```json
 {
   "success" : false,
-  "message" : "Unauthorized",
-  "data": null
+  "message" : "Unauthorized"
 }
 ```
