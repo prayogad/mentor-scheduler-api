@@ -4,7 +4,7 @@
 
 The **Mentor Scheduler API** is a backend application designed to facilitate seamless mentoring sessions between students and mentors. The system allows students to book available mentoring sessions provided by mentors, and enables mentors to manage their availability efficiently. The API supports role-based functionality, allowing users to register as either a **student** or a **mentor**.
 
-### Key Features:
+## Key Features:
 - **Student Role**:
   - Browse and book available mentoring sessions from mentors.
   - View all booked sessions.
@@ -37,15 +37,8 @@ DATABASE_URL="mysql://username:password@host:port/dbName"
 
 
 ```bash
+# install dependencies
 $ npm install
-
-$ npx prisma migrate dev
-
-$ npx prisma generate
-
-$ npm run build
-
-$ npm run start
 ```
 
 ## Compile and run the project
