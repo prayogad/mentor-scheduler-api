@@ -28,6 +28,12 @@ The **Mentor Scheduler API** is a backend application designed to facilitate sea
 - ![Winston](https://img.shields.io/badge/-Winston-333333?style=flat&logo=winston&logoColor=white)
 - ![Zod](https://img.shields.io/badge/-Zod-3178C6?style=flat&logo=zod&logoColor=white)
 
+## API Specifications
+
+- [user](https://github.com/prayogad/mentor-scheduler-api/blob/c8626c5ed09b5d971a4862de1812b917e3a97d11/docs/user.md)
+- [mentor](https://github.com/prayogad/mentor-scheduler-api/blob/c8626c5ed09b5d971a4862de1812b917e3a97d11/docs/mentor.md)
+- [session](https://github.com/prayogad/mentor-scheduler-api/blob/c8626c5ed09b5d971a4862de1812b917e3a97d11/docs/session.md)
+
 ## Project setup
 
 Create .env file for database connection
