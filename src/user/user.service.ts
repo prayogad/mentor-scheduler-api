@@ -29,7 +29,7 @@ export class UserService {
     async register(request: RegisterUserRequest): Promise<UserResponse> {
         const registerRequest: RegisterUserRequest = this.validationService.validate(UserValidation.REGISTER, request)
 
-        this.ifEmailRegistered(registerRequest.email);
+        await this.ifEmailRegistered(registerRequest.email);
 
         registerRequest.password = await bcrypt.hash(registerRequest.password, 10)
 

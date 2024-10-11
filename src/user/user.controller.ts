@@ -31,7 +31,7 @@ export class UserController {
         @Res() res: Response
     ) {
         const result = await this.userService.login(request);
-        res.cookie('auth', result.token, { path: '/', signed: true, expires: new Date(Date.now() + 90000) });
+        res.cookie('auth', result.token, { path: '/', signed: true, expires: new Date(Date.now() + 86400000) }); 
 
         res.status(200).json({
             success: true,
@@ -86,13 +86,15 @@ export class UserController {
     @Post('/api/logout')
     @HttpCode(200)
     async logout(
-        @Auth() user: User
-    ): Promise<WebResponse<boolean>> {
+        @Auth() user: User,
+        @Res() res: Response
+    ) {
         await this.userService.logout(user);
+        res.clearCookie('auth', { path: '/' });
 
-        return {
+        res.status(200).json({
             success: true,
-            message: "successfully logout user"
-        }
+            message: 'successfully logout user'
+        });
     }
 }

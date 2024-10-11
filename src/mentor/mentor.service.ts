@@ -12,7 +12,27 @@ export class MentorService {
         private prismaService: PrismaService
     ) { }
 
+    async checkMentorMustExist(userId: number) {
+        const mentor = await this.prismaService.user.findFirst({
+            where: {
+                AND: [
+                    {
+                        id: userId
+                    },
+                    {
+                        role: "mentor"
+                    }
+                ]
+            }
+        });
+        
+        if (!mentor) {
+            throw new HttpException("mentor not found", 404)
+        }
+    }
+
     async profile(user: User, request: ProfileRequest): Promise<MentorResponse> {
+        this.checkMentorMustExist(user.id)
         const profileRequest: ProfileRequest = this.validationService.validate(MentorValidation.PROFILE, request);
 
         const profile = await this.prismaService.mentorProfile.update({

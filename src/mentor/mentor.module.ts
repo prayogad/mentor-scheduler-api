@@ -4,6 +4,7 @@ import { MentorController } from "./mentor.controller";
 
 @Module({
     providers: [MentorService],
-    controllers: [MentorController]
+    controllers: [MentorController],
+    exports: [MentorService]
 })
 export class MentorModule {}

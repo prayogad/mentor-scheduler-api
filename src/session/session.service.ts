@@ -4,12 +4,14 @@ import { ValidationService } from "../common/validation.service";
 import { MentorSession, User } from "@prisma/client";
 import { AddSessionRequest, BookSessionRequest, BookSessionResponse, SessionResponse, UpdateSessionRequest } from "src/model/session.model";
 import { SessionValidation } from "./session.validation";
+import { MentorService } from "../mentor/mentor.service";
 
 @Injectable()
 export class SessionService {
     constructor(
         private validationService: ValidationService,
-        private prismaService: PrismaService
+        private prismaService: PrismaService,
+        private mentorService: MentorService
     ) { }
 
     toSessionResponse(session: MentorSession): SessionResponse {
@@ -17,25 +19,6 @@ export class SessionService {
             id: session.id,
             scheduledAt: session.scheduledAt,
             quota: session.quota
-        }
-    }
-
-    async checkMentorMustExist(userId: number) {
-        const mentor = await this.prismaService.user.findFirst({
-            where: {
-                AND: [
-                    {
-                        id: userId
-                    },
-                    {
-                        role: "mentor"
-                    }
-                ]
-            }
-        });
-
-        if (!mentor) {
-            throw new HttpException("mentor not found", 404)
         }
     }
     
@@ -75,7 +58,7 @@ export class SessionService {
 
     async add(user: User, request: AddSessionRequest): Promise<SessionResponse> {
         const sessionRequest: AddSessionRequest = this.validationService.validate(SessionValidation.CREATE, request);
-        await this.checkMentorMustExist(user.id);
+        await this.mentorService.checkMentorMustExist(user.id)
 
         const record = {
             ...sessionRequest,
@@ -91,7 +74,7 @@ export class SessionService {
 
     async update(user: User, request: UpdateSessionRequest): Promise<SessionResponse> {
         const updateRequest: UpdateSessionRequest = this.validationService.validate(SessionValidation.UPDATE, request);
-        await this.checkMentorMustExist(user.id);
+        this.mentorService.checkMentorMustExist(user.id)
         const currentSession = await this.checkSessionMustExist(updateRequest.id, user.id);
 
         if(updateRequest.scheduledAt) {
@@ -113,7 +96,7 @@ export class SessionService {
     }
     
     async remove(user: User, sessionId: number): Promise<SessionResponse> {
-        await this.checkMentorMustExist(user.id);
+        this.mentorService.checkMentorMustExist(user.id)
         const currentSession = await this.checkSessionMustExist(sessionId, user.id);
 
         const session = await this.prismaService.mentorSession.delete({
@@ -126,7 +109,7 @@ export class SessionService {
     }
 
     async get(mentorId: number): Promise<SessionResponse[]> {
-        await this.checkMentorMustExist(mentorId);
+        this.mentorService.checkMentorMustExist(mentorId);
         
         const sessions = await this.prismaService.mentorSession.findMany({
             where: {
