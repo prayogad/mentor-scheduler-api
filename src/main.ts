@@ -10,6 +10,13 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.use(cookieParser(configService.get('COOKIE_PARSER_KEY')))
 
+    // Enable CORS
+    app.enableCors({
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+      credentials: true,
+    });
+
   const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
   
