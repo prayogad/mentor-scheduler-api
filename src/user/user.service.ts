@@ -6,13 +6,25 @@ import { HttpException, Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { User } from "@prisma/client";
 import { v4 as uuid } from 'uuid';
+import * as jwt from 'jsonwebtoken';
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UserService {
     constructor(
         private validationService: ValidationService,
-        private prismaService: PrismaService
+        private prismaService: PrismaService,
+        private configService: ConfigService
     ) { }
+
+    generateAccessToken(user: User): string {
+        return jwt.sign({ userId: user.id }, this.configService.get<string>('ACCESS_TOKEN_KEY'), { expiresIn: '1m' });
+    };
+
+    generateRefreshToken(user: User): string {
+        const refreshToken = jwt.sign({ userId: user.id }, this.configService.get<string>('REFRESH_TOKEN_KEY'), { expiresIn: '7d' });
+        return refreshToken;
+    };
 
     async ifEmailRegistered(email: string) {
         const user = await this.prismaService.user.count({
@@ -73,9 +85,13 @@ export class UserService {
             throw new HttpException('email or password wrong', 401)
         };
 
+        // Generate tokens
+        const accessToken = this.generateAccessToken(user);
+        const refreshToken = this.generateRefreshToken(user);
+
         user = await this.prismaService.user.update({
             data: {
-                token: uuid()
+                token: refreshToken
             },
             where: {
                 email: loginRequest.email
@@ -88,7 +104,8 @@ export class UserService {
             name: user.name,
             phone: user.phone,
             role: user.role,
-            token: user.token
+            access_token: accessToken,
+            refresh_token: user.token
         }
     };
 

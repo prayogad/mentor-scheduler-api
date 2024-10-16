@@ -1,14 +1,19 @@
-import { Body, Controller, Get, HttpCode, Post, Put, Res } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Post, Put, Req, Res } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { DashboardResponse, LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from "../model/user.model";
 import { WebResponse } from "../model/web.model";
 import { Auth } from "../common/auth.decorator";
 import { User } from "@prisma/client";
-import { Response } from "express";
+import { Response, Request } from "express";
+import { ConfigService } from "@nestjs/config";
+import * as jwt from 'jsonwebtoken';
 
 @Controller('/user')
 export class UserController {
-    constructor(private userService: UserService) {}
+    constructor(
+        private userService: UserService,
+        private configService: ConfigService
+    ) { }
 
     @Post('/register')
     @HttpCode(200)
@@ -31,13 +36,41 @@ export class UserController {
         @Res() res: Response
     ) {
         const result = await this.userService.login(request);
-        res.cookie('auth', result.token, { path: '/', signed: true, expires: new Date(Date.now() + 86400000) }); 
+
+        res.cookie('refreshToken', result.refresh_token, {
+            path: '/',
+            signed: true, 
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
 
         res.status(200).json({
             success: true,
             message: `successfully login user`,
             data: result
         });
+    }
+    
+    // ToDo
+    @Post('/refresh-token')
+    @HttpCode(200)
+    async refreshToken(
+        @Auth() user: User,
+        @Res() res: Response,
+        @Req() req: Request
+    ) {
+        // const result = await this.userService.login(request);
+        const refreshToken: string = req.signedCookies['refreshToken'] as string;
+        // res.cookie('refreshToken', result.refresh_token, {
+        //     path: '/',
+        //     signed: true, 
+        //     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        // });
+
+        // res.status(200).json({
+        //     success: true,
+        //     message: `successfully login user`,
+        //     data: result
+        // });
     }
 
     @Get('/api/current')
@@ -46,7 +79,7 @@ export class UserController {
         @Auth() user: User
     ): Promise<WebResponse<UserResponse>> {
         const result = await this.userService.get(user);
-        
+
         return {
             success: true,
             message: "successfully get user",
@@ -75,7 +108,7 @@ export class UserController {
         @Auth() user: User
     ): Promise<WebResponse<DashboardResponse[]>> {
         const result = await this.userService.getDashboard(user);
-        
+
         return {
             success: true,
             message: "successfully get user dashboard",

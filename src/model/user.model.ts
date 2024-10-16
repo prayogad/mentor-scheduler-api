@@ -4,7 +4,8 @@ export class UserResponse {
     name: string;
     phone: string;
     role: string;
-    token?: string
+    access_token?: string
+    refresh_token?: string
 }
 
 export class DashboardResponse {
