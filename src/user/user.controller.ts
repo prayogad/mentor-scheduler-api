@@ -54,23 +54,18 @@ export class UserController {
     @Post('/refresh-token')
     @HttpCode(200)
     async refreshToken(
-        @Auth() user: User,
         @Res() res: Response,
         @Req() req: Request
     ) {
-        // const result = await this.userService.login(request);
         const refreshToken: string = req.signedCookies['refreshToken'] as string;
-        // res.cookie('refreshToken', result.refresh_token, {
-        //     path: '/',
-        //     signed: true, 
-        //     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        // });
+        
+        const result = await this.userService.refresh(refreshToken)
 
-        // res.status(200).json({
-        //     success: true,
-        //     message: `successfully login user`,
-        //     data: result
-        // });
+        res.status(200).json({
+            success: true,
+            message: `successfully refresh user token`,
+            data: result
+        });
     }
 
     @Get('/api/current')
@@ -123,7 +118,7 @@ export class UserController {
         @Res() res: Response
     ) {
         await this.userService.logout(user);
-        res.clearCookie('auth', { path: '/' });
+        res.clearCookie('refreshToken', { path: '/' });
 
         res.status(200).json({
             success: true,

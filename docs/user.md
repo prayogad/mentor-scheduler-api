@@ -57,7 +57,33 @@ Response Body (Success) :
     "name" : "John Doe",
     "phone" : "123456789",
     "role": "mentor" | "student",
-    "token": "uuid
+    "access_token": "jwt-access-token",
+    "refresh_token": "jwt-refresh-token"
+  }
+}
+```
+
+## Refresh User Access Token
+
+Endpoint : POST /user/refresh-token
+
+Cookies :
+- refreshToken: jwt-refresh-token
+
+Response Body (Success) :
+
+```json
+{
+  "success" : true,
+  "message": "successfully login user",
+  "data" : {
+    "id": 1,
+    "email" : "johndoe@example.com",
+    "name" : "John Doe",
+    "phone" : "123456789",
+    "role": "mentor" | "student",
+    "access_token": "jwt-access-token",
+    "refresh_token": "jwt-refresh-token"
   }
 }
 ```
@@ -66,8 +92,11 @@ Response Body (Success) :
 
 Endpoint : GET /user/api/current
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Response Body (Success) :
 
@@ -89,8 +118,11 @@ Response Body (Success) :
 
 Endpoint : PUT /user/api/update
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Request Body :
 
@@ -123,8 +155,11 @@ Response Body (Success) :
 
 Endpoint : GET /user/api/dashboard
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Response Body (Success) :
 
@@ -153,8 +188,11 @@ Response Body (Success) :
 
 Endpoint : POST /user/logout
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Response Body (Success) :
 

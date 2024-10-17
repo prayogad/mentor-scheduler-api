@@ -39,6 +39,9 @@ The **Mentor Scheduler API** is a backend application designed to facilitate sea
 Create .env file for database connection
 ```
 DATABASE_URL="mysql://username:password@host:port/dbName"
+COOKIE_PARSER_KEY="your-cookie-parser-key"
+ACCESS_TOKEN_KEY="your-access-token-key"
+REFRESH_TOKEN_KEY="your-refresh-token-key"
 ```
 
 

@@ -18,7 +18,7 @@ export class UserService {
     ) { }
 
     generateAccessToken(user: User): string {
-        return jwt.sign({ userId: user.id }, this.configService.get<string>('ACCESS_TOKEN_KEY'), { expiresIn: '1m' });
+        return jwt.sign({ userId: user.id }, this.configService.get<string>('ACCESS_TOKEN_KEY'), { expiresIn: '15m' });
     };
 
     generateRefreshToken(user: User): string {
@@ -105,9 +105,34 @@ export class UserService {
             phone: user.phone,
             role: user.role,
             access_token: accessToken,
-            refresh_token: user.token
+            refresh_token: refreshToken
         }
     };
+
+    async refresh(refreshToken: string): Promise<UserResponse> {
+        if (!refreshToken) throw new HttpException('refresh token not valid', 401)
+
+        let user = jwt.verify(refreshToken, this.configService.get<string>('REFRESH_TOKEN_KEY'));
+        
+        user = await this.prismaService.user.findUnique({
+            where: {
+                id: user.userId,
+                token: refreshToken
+            }
+        })
+
+        const accessToken = this.generateAccessToken(user);
+
+        return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            phone: user.phone,
+            role: user.role,
+            access_token: accessToken,
+            refresh_token: user.token
+        }
+    }
 
     async get(user: User): Promise<UserResponse> {
         return {

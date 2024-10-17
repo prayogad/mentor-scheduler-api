@@ -4,8 +4,11 @@
 
 Endpoint : PUT /mentor/api/profile
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Request Body :
 

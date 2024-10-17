@@ -11,47 +11,28 @@ export class AuthMiddleware implements NestMiddleware {
     ) { }
 
     async use(req: any, res: any, next: (error?: Error | any) => void) {
-        // const token: string = req.signedCookies['auth'] as string;
         const token: string = req.headers['authorization'] as string;
         // const token: string = authHeader && authHeader.split(' ')[1];
 
-
-        // const decode: string = jwt.verify(token, this.configService.get<string>('ACCESS_TOKEN_KEY')) as string
-
         jwt.verify(token, this.configService.get<string>('ACCESS_TOKEN_KEY'), async (err, user) => {
-            console.log(user)
             if (!err) {
                 const refreshToken: string = req.signedCookies['refreshToken'] as string;
-                // if (err) throw new HttpException(error, 401)
+                
+                if (refreshToken) {
+                    user = await this.prismaService.user.findUnique({
+                        where: {
+                            id: user.userId,
+                            token: undefined
+                        }
+                    });
 
-                user = await this.prismaService.user.findUnique({
-                    where: {
-                        id: user.userId,
-                        token: refreshToken
+                    if (user) {
+                        req.user = user;
                     }
-                });
-
-                if (user) {
-                    req.user = user;
                 }
-
-                // req.user = user;
-            }
+                
+            } 
             next();
         });
-
-
-        // if (token) {
-        //     const user = await this.prismaService.user.findUnique({
-        //         where: {
-        //             token: refreshToken
-        //         }
-        //     });
-
-        //     if (user) {
-        //         req.user = user;
-        //     }
-        // }
-        // next();
     }
 }

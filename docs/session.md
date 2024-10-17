@@ -4,8 +4,11 @@
 
 Endpoint : POST /session/api/addSession
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Request Body :
 
@@ -35,8 +38,11 @@ Response Body (Success) :
 
 Endpoint : PUT /session/api/updateSession/:sessionId
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Request Body :
 
@@ -93,8 +99,11 @@ Response Body
 
 Endpoint : DELETE /session/api/deleteSession/:sessionId
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Response Body
 
@@ -109,8 +118,11 @@ Response Body
 
 Endpoint : POST /session/api/student/bookSession/:mentorId
 
+Request Headers :
+- Authorization : jwt-access-token
+
 Cookies :
-- auth: token
+- refreshToken: jwt-refresh-token
 
 Request Body :
 
