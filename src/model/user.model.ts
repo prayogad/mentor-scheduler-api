@@ -1,36 +1,36 @@
 export class UserResponse {
-    id: number;
-    email: string;
-    name: string;
-    phone: string;
-    role: string;
-    access_token?: string
-    refresh_token?: string
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  role: string;
+  access_token?: string;
+  refresh_token?: string;
 }
 
 export class DashboardResponse {
-    mentor_name: string;
-    student_name: string;
-    scheduledAt: Date;
-    field: string;
+  mentor_name: string;
+  student_name: string;
+  scheduledAt: Date;
+  field: string;
 }
 
 export class RegisterUserRequest {
-    email: string;
-    password: string;
-    name: string;
-    phone: string;
-    role: string;
+  email: string;
+  password: string;
+  name: string;
+  phone: string;
+  role: string;
 }
 
 export class LoginUserRequest {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 export class UpdateUserRequest {
-    email?: string;
-    password?: string;
-    name?: string;
-    phone?: string;
+  email?: string;
+  password?: string;
+  name?: string;
+  phone?: string;
 }

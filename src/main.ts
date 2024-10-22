@@ -8,19 +8,19 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
-  app.use(cookieParser(configService.get('COOKIE_PARSER_KEY')))
+  app.use(cookieParser(configService.get('COOKIE_PARSER_KEY')));
 
-    // Enable CORS
-    app.enableCors({
-      origin: 'http://localhost:3000',
-      methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-      credentials: true,
-    });
+  // Enable CORS
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  });
 
   const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
-  
-  const port = process.env.PORT || 8080
+
+  const port = process.env.PORT || 8080;
   await app.listen(port);
 
   console.info(`🚀 Application is running on: http://localhost:${port}`);
