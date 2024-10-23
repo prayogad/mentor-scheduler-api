@@ -158,6 +158,26 @@ export class UserService {
   }
 
   async get(user: User): Promise<UserResponse> {
+    // let mentorProfile;
+    if (user.role === 'mentor') {
+      const mentor = await this.prismaService.mentorProfile.findUnique({
+        where: {
+          mentor_id: user.id
+        }
+      })
+      // mentorProfile = mentor;
+
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone,
+        role: user.role,
+        bio: mentor.bio,
+        field: mentor.field
+      };
+    }
+
     return {
       id: user.id,
       email: user.email,

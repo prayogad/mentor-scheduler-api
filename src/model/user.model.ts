@@ -4,6 +4,8 @@ export class UserResponse {
   name: string;
   phone: string;
   role: string;
+  field?: string;
+  bio?: string;  
   access_token?: string;
   refresh_token?: string;
 }
