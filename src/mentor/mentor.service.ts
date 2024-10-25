@@ -10,7 +10,7 @@ export class MentorService {
   constructor(
     private validationService: ValidationService,
     private prismaService: PrismaService,
-  ) {}
+  ) { }
 
   async checkMentorMustExist(userId: number) {
     const mentor = await this.prismaService.user.findFirst({
@@ -68,12 +68,19 @@ export class MentorService {
       },
       include: {
         mentor_profile: true,
+        mentor_sessions: true
       },
     });
 
     if (!mentor) {
       throw new HttpException('mentor not found', 404);
     }
+
+    const schedule = mentor.mentor_sessions.map((schedule) => ({
+      id: schedule.id,
+      quota: schedule.quota,
+      scheduleAt: schedule.scheduledAt
+    }))
 
     return {
       id: mentor.id,
@@ -82,6 +89,7 @@ export class MentorService {
       phone: mentor.phone,
       field: mentor.mentor_profile.field,
       bio: mentor.mentor_profile.bio,
+      schedule: schedule
     };
   }
 

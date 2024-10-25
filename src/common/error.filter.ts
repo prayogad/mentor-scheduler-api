@@ -27,7 +27,7 @@ export class ErrorFilter implements ExceptionFilter {
     } else if (exception instanceof ZodError) {
       response.status(400).json({
         success: false,
-        message: exception.errors,
+        message: exception.errors
       });
     } else if (
       exception instanceof TokenExpiredError ||

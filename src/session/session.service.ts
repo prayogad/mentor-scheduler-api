@@ -150,10 +150,26 @@ export class SessionService {
       request,
     );
     await this.checkStudentMustExist(user.id);
-    await this.checkSessionMustExist(
+    
+    const session = await this.checkSessionMustExist(
       bookRequest.session_id,
       bookRequest.mentor_id,
     );
+
+    if (session.quota <= 0) {
+      throw new HttpException('quota has run out', 400)
+    }
+
+    const isSessionAlreadyBeBooked = await this.prismaService.bookedSession.findFirst({
+      where: {
+        session_id: bookRequest.session_id,
+        student_id: user.id
+      }
+    })
+
+    if(isSessionAlreadyBeBooked) {
+      throw new HttpException('you already booked this sessions', 400)
+    }
 
     const bookedSession = await this.prismaService.bookedSession.create({
       data: {
@@ -173,6 +189,17 @@ export class SessionService {
         },
       },
     });
+
+    await this.prismaService.mentorSession.update({
+      where: {
+        id: bookRequest.session_id
+      },
+      data: {
+        quota: {
+          decrement: 1
+        }
+      }
+    })
 
     return {
       scheduledAt: bookedSession.session.scheduledAt,
