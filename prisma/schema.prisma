@@ -19,7 +19,7 @@ model User {
   password String  @db.VarChar(100)
   name     String  @db.VarChar(100)
   phone    String  @db.VarChar(20)
-  token    String? @unique @db.VarChar(100)
+  token    String? @unique @db.VarChar(255)
   role     String  @db.VarChar(7)
 
   mentor_profile  MentorProfile?
