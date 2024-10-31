@@ -4,13 +4,19 @@ import { ValidationService } from '../common/validation.service';
 import { MentorResponse, ProfileRequest } from 'src/model/mentor.model';
 import { MentorValidation } from './mentor.validation';
 import { HttpException, Injectable } from '@nestjs/common';
+import {Multer} from 'multer';
+import { createClient } from '@supabase/supabase-js';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MentorService {
   constructor(
     private validationService: ValidationService,
     private prismaService: PrismaService,
+    private configService: ConfigService,
   ) { }
+
+  supabase = createClient(this.configService.get<string>('SUPABASE_URL'), this.configService.get<string>('SUPABASE_ANON_KEY'))
 
   async checkMentorMustExist(userId: number) {
     const mentor = await this.prismaService.user.findFirst({
@@ -31,12 +37,21 @@ export class MentorService {
     }
   }
 
-  async profile(user: User, request: ProfileRequest): Promise<MentorResponse> {
+  async profile(user: User, request: ProfileRequest, file: Express.Multer.File): Promise<MentorResponse> {
     this.checkMentorMustExist(user.id);
     const profileRequest: ProfileRequest = this.validationService.validate(
       MentorValidation.PROFILE,
       request,
     );
+
+    const data = await this.supabase.storage
+      .from('mentor_pictures')
+      .upload(`uploads/${Date.now()}-${file.originalname}`, file.buffer, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    const publicUrl = this.supabase.storage.from('mentor_pictures').getPublicUrl(data.data.path)
 
     const profile = await this.prismaService.mentorProfile.update({
       where: {
@@ -45,6 +60,7 @@ export class MentorService {
       data: {
         field: profileRequest.field,
         bio: profileRequest.bio,
+        picture_url: publicUrl.data.publicUrl
       },
       include: {
         mentor: true,

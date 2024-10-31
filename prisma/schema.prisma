@@ -30,11 +30,12 @@ model User {
 }
 
 model MentorProfile {
-  id        Int     @id @default(autoincrement())
-  mentor_id Int     @unique
-  bio       String? @db.Text
-  field     String? @db.VarChar(100)
-  mentor    User    @relation(fields: [mentor_id], references: [id], onDelete: Cascade)
+  id          Int     @id @default(autoincrement())
+  mentor_id   Int     @unique
+  bio         String? @db.Text
+  field       String? @db.VarChar(100)
+  picture_url String? @db.Text()
+  mentor      User    @relation(fields: [mentor_id], references: [id], onDelete: Cascade)
 
   @@map("mentor_profiles")
 }

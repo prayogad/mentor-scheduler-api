@@ -109,6 +109,8 @@ export class UserService {
     const accessToken = this.generateAccessToken(user);
     const refreshToken = this.generateRefreshToken(user);
 
+    console.log(`\n${refreshToken}\n`)
+
     user = await this.prismaService.user.update({
       data: {
         token: refreshToken,

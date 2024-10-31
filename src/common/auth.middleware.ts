@@ -30,6 +30,8 @@ export class AuthMiddleware implements NestMiddleware {
               },
             });
 
+            console.log(`\n${refreshToken}\n`)
+
             if (user) {
               req.user = user;
             }
