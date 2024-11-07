@@ -25,22 +25,13 @@ export class MentorController {
 
   @Put('/api/profile')
   @HttpCode(200)
+  @UseInterceptors(FileInterceptor('file'))
   async profile(
     @Auth() user: User,
     @Body() request: ProfileRequest,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1000 }),
-          new FileTypeValidator({ fileType: 'image/jpeg' }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-
+    @UploadedFile() file,
   ): Promise<WebResponse<MentorResponse>> {
-    const result = await this.mentorService.profile(user, request, file);
-
+    const result = await this.mentorService.profile(user, { ...request, file });
     return {
       success: true,
       message: 'successfully update mentor profile',

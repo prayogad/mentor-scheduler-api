@@ -11,6 +11,7 @@ export class MentorResponse {
 export class ProfileRequest {
   field: string;
   bio: string;
+  file?: Express.Multer.File;
 }
 
 export class MentorSchedule {

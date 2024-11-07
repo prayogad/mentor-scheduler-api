@@ -4,7 +4,7 @@ import { ValidationService } from '../common/validation.service';
 import { MentorResponse, ProfileRequest } from 'src/model/mentor.model';
 import { MentorValidation } from './mentor.validation';
 import { HttpException, Injectable } from '@nestjs/common';
-import {Multer} from 'multer';
+import * as multer from 'multer';
 import { createClient } from '@supabase/supabase-js';
 import { ConfigService } from '@nestjs/config';
 
@@ -37,21 +37,31 @@ export class MentorService {
     }
   }
 
-  async profile(user: User, request: ProfileRequest, file: Express.Multer.File): Promise<MentorResponse> {
+  async profile(user: User, request: ProfileRequest): Promise<MentorResponse> {
+    if (!request.file) throw new HttpException('no file', 400)
+
     this.checkMentorMustExist(user.id);
     const profileRequest: ProfileRequest = this.validationService.validate(
       MentorValidation.PROFILE,
       request,
     );
 
-    const data = await this.supabase.storage
+
+    let pictureUrl: string | null = null;
+    const storage = multer.memoryStorage();
+    const upload = multer({ storage });
+
+    const { data, error} = await this.supabase.storage
       .from('mentor_pictures')
-      .upload(`uploads/${Date.now()}-${file.originalname}`, file.buffer, {
+      .upload(`uploads/${Date.now()}-${request.file.originalname}`, request.file.buffer, {
         cacheControl: '3600',
         upsert: false
       });
 
-    const publicUrl = this.supabase.storage.from('mentor_pictures').getPublicUrl(data.data.path)
+    if (error) throw new HttpException(error, 400)
+
+    const publicUrl = this.supabase.storage.from('mentor_pictures').getPublicUrl(data.path);
+    pictureUrl = publicUrl.data.publicUrl;
 
     const profile = await this.prismaService.mentorProfile.update({
       where: {
@@ -60,7 +70,7 @@ export class MentorService {
       data: {
         field: profileRequest.field,
         bio: profileRequest.bio,
-        picture_url: publicUrl.data.publicUrl
+        picture_url: pictureUrl,
       },
       include: {
         mentor: true,

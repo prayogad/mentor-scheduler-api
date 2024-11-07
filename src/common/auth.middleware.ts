@@ -29,9 +29,7 @@ export class AuthMiddleware implements NestMiddleware {
                 token: refreshToken,
               },
             });
-
-            console.log(`\n${refreshToken}\n`)
-
+            
             if (user) {
               req.user = user;
             }
