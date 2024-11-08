@@ -25,11 +25,19 @@ export class MentorController {
 
   @Put('/api/profile')
   @HttpCode(200)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 10 * 1024 * 1024 } })) // Multer file size limit
   async profile(
     @Auth() user: User,
     @Body() request: ProfileRequest,
-    @UploadedFile() file,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 10MB limit,
+          new FileTypeValidator({ fileType: 'image/*' }), // Allow all image formats
+        ],
+      }),
+    )
+    file: Express.Multer.File,
   ): Promise<WebResponse<MentorResponse>> {
     const result = await this.mentorService.profile(user, { ...request, file });
     return {

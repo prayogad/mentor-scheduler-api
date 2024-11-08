@@ -16,7 +16,7 @@ export class MentorService {
     private configService: ConfigService,
   ) { }
 
-  supabase = createClient(this.configService.get<string>('SUPABASE_URL'), this.configService.get<string>('SUPABASE_ANON_KEY'))
+  // supabase = createClient(this.configService.get<string>('SUPABASE_URL'), this.configService.get<string>('SUPABASE_ANON_KEY'))
 
   async checkMentorMustExist(userId: number) {
     const mentor = await this.prismaService.user.findFirst({
@@ -38,7 +38,7 @@ export class MentorService {
   }
 
   async profile(user: User, request: ProfileRequest): Promise<MentorResponse> {
-    if (!request.file) throw new HttpException('no file', 400)
+    // if (!request.file) throw new HttpException('no file', 400)
 
     this.checkMentorMustExist(user.id);
     const profileRequest: ProfileRequest = this.validationService.validate(
@@ -46,21 +46,23 @@ export class MentorService {
       request,
     );
 
+    const supabase = createClient(this.configService.get<string>('SUPABASE_URL'), this.configService.get<string>('SUPABASE_ANON_KEY'))
 
     let pictureUrl: string | null = null;
     const storage = multer.memoryStorage();
     const upload = multer({ storage });
 
-    const { data, error} = await this.supabase.storage
+    const { data, error} = await supabase.storage
       .from('mentor_pictures')
-      .upload(`uploads/${Date.now()}-${request.file.originalname}`, request.file.buffer, {
+      .upload(`/uploads/${Date.now()}-${profileRequest.file.originalname}`, profileRequest.file.buffer, {
         cacheControl: '3600',
-        upsert: false
+        upsert: false,
+        contentType: profileRequest.file.mimetype, 
       });
 
     if (error) throw new HttpException(error, 400)
 
-    const publicUrl = this.supabase.storage.from('mentor_pictures').getPublicUrl(data.path);
+    const publicUrl = supabase.storage.from('mentor_pictures').getPublicUrl(data.path);
     pictureUrl = publicUrl.data.publicUrl;
 
     const profile = await this.prismaService.mentorProfile.update({
@@ -84,6 +86,7 @@ export class MentorService {
       phone: profile.mentor.phone,
       field: profile.field,
       bio: profile.bio,
+      picture_url: profile.picture_url
     };
   }
 
@@ -115,6 +118,7 @@ export class MentorService {
       phone: mentor.phone,
       field: mentor.mentor_profile.field,
       bio: mentor.mentor_profile.bio,
+      picture_url: mentor.mentor_profile.picture_url,
       schedule: schedule
     };
   }
@@ -136,6 +140,7 @@ export class MentorService {
       phone: mentor.phone,
       field: mentor.mentor_profile.field || '',
       bio: mentor.mentor_profile.bio || '',
+      picture_url: mentor.mentor_profile.picture_url || ''
     }));
   }
 }

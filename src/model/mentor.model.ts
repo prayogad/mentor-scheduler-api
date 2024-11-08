@@ -5,6 +5,7 @@ export class MentorResponse {
   phone: string;
   field: string;
   bio: string;
+  picture_url: string;
   schedule?: MentorSchedule[];
 }
 
